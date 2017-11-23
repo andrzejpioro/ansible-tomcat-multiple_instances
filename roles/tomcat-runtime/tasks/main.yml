@@ -1,0 +1,60 @@
+ # Setting ports for https and shutdown connector
+ - name: Set fact for Shutdown Port
+   set_fact: tomcat_shutdown_port={{tomcat_http_port | int + 1000 }}
+ - name: Set fact for Https Port
+   set_fact: tomcat_https_port={{tomcat_http_port  | int + 100 }}
+ - name: Set fact for Redirect Port
+   set_fact: tomcat_redirect_port={{tomcat_https_port}}
+ 
+
+ - name: Create Tomcat directory
+   file: state=directory path="{{ catalina_base }}/{{ item }}" owner="{{ tomcat_user }}" group="{{ middleware_group }}"
+   with_items:
+     - bin
+     - conf
+     - lib
+     - tmp
+     - webapps
+     - work
+     - webapps/ROOT/WEB-INF
+
+ - name: Copy config files from template
+   template: src="{{ item.template }}" dest={{ catalina_base }}/{{ item.dest }} owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750
+   with_items:
+    - { template: 'bin/setEnv.sh.j2', dest: 'bin/setEnv.sh' }
+    - { template: 'conf/logging.properties.j2', dest: 'conf/logging.properties' }
+    - { template: 'conf/tomcat-users.xml.j2', dest: 'conf/tomcat-users.xml' }
+    - { template: 'conf/server.xml.j2', dest: 'conf/server.xml' }
+
+ - copy: src="{{ item.sname }}" dest="{{ catalina_base }}/{{ item.dest }}" owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750 backup=no
+   with_items:
+     - { sname: 'conf/catalina.policy', dest: 'conf/catalina.policy' }
+     - { sname: 'conf/catalina.properties', dest: 'conf/catalina.properties' }
+     - { sname: 'conf/context.xml', dest: 'conf/context.xml' }
+     - { sname: 'conf/tomcat-users.xsd', dest: 'conf/tomcat-users.xsd' }
+     - { sname: 'conf/web.xml', dest: 'conf/web.xml' }
+     - { sname: 'webapps/ROOT/index.html', dest: 'webapps/ROOT/index.html' }
+     - { sname: 'webapps/ROOT/WEB-INF/web.xml', dest: 'webapps/ROOT/WEB-INF/web.xml' }
+
+ - name: Deploy Tomcat Manager
+   command: cp -r "{{catalina_home}}/webapps/manager" "{{ catalina_base }}/webapps/" 
+ - name: Copy config files from template
+   template: src="{{ item.template }}" dest={{ catalina_base }}/{{ item.dest }} owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750
+   with_items:
+    - { template: 'webapps/manager/META-INF/context.xml.j2', dest: 'webapps/manager/META-INF/context.xml' }
+ 
+
+
+ - name: Disable SELinux
+   selinux: state=disabled
+ - name: Disable Firewall Deamon (firewalld)
+   service: name=firewalld state=stopped enabled=no
+
+ # ==> Add limits for oracle user
+ - name: Add oracle user limits
+   lineinfile: dest=/etc/security/limits.conf line='{{ tomcat_user }} {{ item.limit }} {{ item.type}} {{ item.value }}'
+   with_items:
+     - { limit: 'soft', type: nofile, value: '{{ soft_no_file }}' }
+     - { limit: 'hard', type: nofile, value: '{{ hard_no_file }}' }
+     - { limit: 'soft', type: nproc, value: '{{ soft_nproc }}' }
+     - { limit: 'hard', type: nproc, value: '{{ hard_nproc }}' }

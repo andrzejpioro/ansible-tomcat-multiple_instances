@@ -1,0 +1,10 @@
+
+export CATALINA_HOME={{ catalina_home }}
+export CATALINA_BASE={{ catalina_base }}
+export CATALINA_PID={{ catalina_base }}/{{ tomcat.runtime.name }}.pid
+export CATALINA_OPTS="-server -Djava.awt.headless=true -Djava.security.edg=file:/dev/./urandom -Xms512M -Xmx512M -DlogLocation={{ catalina_base }}/logs -DserverName={{ tomcat.runtime.name }} -DdomainName={{ tomcat.runtime.domainName }} -DlogLimit=51200KB -DlogRotation=25 "
+export CATALINA_TMPDIR={{ catalina_base }}/tmp
+export CATALINA_OUT={{ catalina_base }}/{{ tomcat.runtime.name }}.out
+export JAVA_HOME={{ jdk_folder }}
+
+

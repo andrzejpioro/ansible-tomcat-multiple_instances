@@ -1,0 +1,27 @@
+  - name: Show Tomcat Env
+    ping: data="Tomcat Version {{ tomcat.version }}, URL {{ tomcat.download_url }}, Dest {{ tomcat.download_dir }}"
+  
+  - name: Set Fact with Catalina Home
+    set_fact:
+      catalina_home="{{ tomcat.binaries.home }}/apache-tomcat-{{ tomcat.version }}"
+
+  - name: Set Fact with Tomcat File Name
+    set_fact:
+        tomcat_archive_file: "apache-tomcat-{{ tomcat.version }}.tar.gz"
+
+  - name: Set Tomcat Binaries home
+    stat: path="{{catalina_home}}"
+    register: catalina_home_path
+
+  - debug: 
+      msg: "Tomcat {{ tomcat.version }} already installed in: {{catalina_home}}"
+    when: catalina_home_path.stat.exists
+
+  - set_fact:
+      tomcat_already_installed: true
+    when: catalina_home_path.stat.exists
+
+  - set_fact:
+      tomcat_already_installed: false
+    when: not catalina_home_path.stat.exists
+

@@ -1,0 +1,21 @@
+--- #Install lynx
+- hosts: local
+  strategy: debug
+  become: yes
+  vars:
+    playbook_version: 1.0
+    java_base_dir: 	/opt/java
+    tomcat_user:  	tomcat
+    java_user:		tomcat
+    middleware_group:   java
+    installation_date:	"{{lookup('pipe', 'date +\"%Y-%m-%d %H:%M:%S\"')}}"
+    # TO-DO - usunac deklaracje zmiennej jdk_folder z tego miejsca
+    jdk_folder: /opt/java/jdk1.8.0_141
+   
+  vars_files:
+    - conf/version.yml
+  roles:
+    #- role: linux-jdk
+    - role: tomcat-software 
+    #- role: tomcat-runtime 
+    #- role: tomcat-service 

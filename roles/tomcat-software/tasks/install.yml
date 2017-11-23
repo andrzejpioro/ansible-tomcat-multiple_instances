@@ -1,0 +1,39 @@
+  - name: Create Tomcat directory
+    file: state=directory path={{ tomcat.download_dir }} owner="{{ tomcat_user }}" group="{{ middleware_group }}"
+ 
+  # - Download Tomcat archive 
+  - name: Set Tomcat Downloaded Archive File Path - to validate if archive is already downloaded
+    stat: path="{{ tomcat.download_dir }}/{{ tomcat_archive_file }}"
+    register: tomcat_archive_file_path
+  
+  - set_fact:
+      tomcat_already_downloaded: true
+    when: tomcat_archive_file_path.stat.exists
+  - set_fact:
+      tomcat_already_downloaded: false
+    when: not tomcat_archive_file_path.stat.exists
+  
+  - debug:
+      msg: "Tomcat already downloaded: {{tomcat_already_installed}} and installed: {{tomcat_already_installed}}"  
+ 
+  - name: Download Tomcat
+    get_url: url=" {{ tomcat.download_url }} " dest="{{ tomcat.download_dir }}"
+    when: not tomcat_already_downloaded and not tomcat_already_installed
+
+  # Extract Tomcat archive
+  - name: Extract Tomcat
+    unarchive:
+     src: "{{ tomcat.download_dir }}/{{ tomcat_archive_file }}"
+     dest: "{{ tomcat.binaries.home }}"
+     remote_src: true
+    when: not tomcat_already_installed
+
+  - name: Set Permision to Tomcat folder
+    file:
+      dest: "{{ tomcat.binaries.home }}/apache-tomcat-{{ tomcat.version }}"
+      owner: "{{ tomcat_user }}"
+      group: "{{ middleware_group }}"
+      mode: 0755
+      recurse: yes
+    when: not tomcat_already_installed
+

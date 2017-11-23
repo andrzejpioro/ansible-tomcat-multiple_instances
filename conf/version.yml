@@ -1,0 +1,33 @@
+java:
+  version: 8
+  subversion: 141
+
+  full_version: jdk1.8.0_141
+  download_repo_base_dir: http://master/repo/java/
+  download_file_name: jdk-8u141-linux-x64.tar
+
+tomcat:
+  version: 8.5.23
+  download_url: http://master/repo/tomcat/apache-tomcat-8.5.23.tar.gz	
+  download_dir: /u01/middleware/tomcat/downloaded
+  binaries:
+    home: /u01/middleware/tomcat
+  runtime:
+    home: /u01/runtime/tomcat
+    name: AppServer01
+    domainName: MyProject
+    
+
+
+tomcat_http_port:     8081
+tomcat_admin_username: admin
+tomcat_admin_password: admin123
+tomcat_mananager_only_from_localhost: false
+
+catalina_home: "{{ tomcat.binaries.home }}/apache-tomcat-{{ tomcat.version }}"
+catalina_base: "{{ tomcat.runtime.home }}/{{ tomcat.runtime.domainName }}/{{ tomcat.runtime.name }}"
+
+soft_no_file: 4096
+hard_no_file: 40960
+soft_nproc: 1024
+hard_nproc: 1024

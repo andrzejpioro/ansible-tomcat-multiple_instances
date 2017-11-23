@@ -1,0 +1,26 @@
+ - name: Create Tomcat service directory
+   file: state=directory path=/usr/lib/systemd/tomcat owner="root" group="root"
+
+
+# Copy service template
+ - name: Copy config files from template
+   template: 
+     src:  tomcat.service.j2
+     dest: "/usr/lib/systemd/tomcat/{{ tomcat.runtime.name }}_{{ tomcat.runtime.domainName }}"
+     owner: "{{ tomcat_user }}" 
+     group: "{{ middleware_group }}" 
+     mode: 750
+
+ - name: Copy config files from template
+   template: src="{{ item.template }}" dest={{ catalina_base }}/{{ item.dest }} owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750
+   with_items:
+      - { template: 'start.sh.j2', dest: 'bin/start.sh' }
+      - { template: 'stop.sh.j2', dest: 'bin/stop.sh' }
+   
+
+ - name: create startup link
+   file: src=/usr/lib/systemd/tomcat/{{ tomcat.runtime.name }}_{{ tomcat.runtime.domainName }} dest="/etc/systemd/system/{{ tomcat.runtime.name }}_{{ tomcat.runtime.domainName }}.service" state=link
+ 
+ - name: start service
+   service: name="{{ tomcat.runtime.name }}_{{ tomcat.runtime.domainName }}" state=restarted daemon_reload=yes
+ 

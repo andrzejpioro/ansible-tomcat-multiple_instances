@@ -1,0 +1,4 @@
+- include: validate.yml
+
+- include: install.yml
+  when: not tomcat_already_installed

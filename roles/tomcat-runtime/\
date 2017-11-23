@@ -1,0 +1,38 @@
+ - name: Create Tomcat directory
+   file: state=directory path="{{ catalina_base }}/{{ item }}" owner="{{ tomcat_user }}" group="{{ middleware_group }}"
+   with_items:
+     - bin
+     - conf
+     - lib
+     - tmp
+     - webapps
+     - work
+     - webapps/ROOT/WEB-INF
+
+ - name: Copy config files from template
+   template:src="bin/{{ item.template }}" dest={ catalina_base }}/{{ item.dest }} owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750
+   with_items:
+    - { template: 'bin/setEnv.sh.j2', dest: 'bin/setEnv.sh' }
+    - { template: 'conf/logging.properties.j2', dest: 'logging.properties' }
+
+
+
+ #:- name: setEnvFile template
+ #  template: src=bin/setEnv.sh.j2 dest={{ catalina_base }}/bin/setEnv.sh owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750 
+ 
+ #- name: logging.properties template
+ #  template: src=conf/logging.properties.j2 dest={{ catalina_base }}/conf/logging.properties owner="{{ tomcat_user }}" group="{{ middleware_group }}" mode=750
+
+
+
+
+ - copy:
+     src: webapps/ROOT/WEB-INF/web.xml 
+     dest: "{{ catalina_base }}/webapps/ROOT/WEB-INF"
+     owner: "{{ tomcat_user }}"
+     group: "{{ middleware_group }}"
+     mode: 750
+     backup: no
+ 
+
+

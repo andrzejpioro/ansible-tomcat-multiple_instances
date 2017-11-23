@@ -1,0 +1,8 @@
+#!/bin/bash
+
+CATALINA_HOME={{ catalina_home }}
+CATALINA_BASE={{ catalina_base }}
+
+. ${CATALINA_BASE}/bin/setEnv.sh
+
+${CATALINA_HOME}/bin/catalina.sh stop 5 -force
