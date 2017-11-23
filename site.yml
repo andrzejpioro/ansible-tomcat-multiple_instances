@@ -18,5 +18,5 @@
   roles:
     - role: linux-jdk
     - role: tomcat-software 
-    #- role: tomcat-runtime 
-    #- role: tomcat-service 
+    - role: tomcat-runtime 
+    - role: tomcat-service 
