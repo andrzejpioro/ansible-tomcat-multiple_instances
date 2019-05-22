@@ -1,14 +1,13 @@
 java:
   version: 8
-  subversion: 141
-
-  full_version: jdk1.8.0_141
-  download_repo_base_dir: http://master/repo/java/
-  download_file_name: jdk-8u141-linux-x64.tar
+  subversion: 211
+  full_version: jdk1.8.0_211
+  download_repo_base_dir: http://51.68.142.164:8081/repository/public/com/oracle/java/jdk/8u211-linux-x64
+  download_file_name: jdk-8u211-linux-x64.tar.gz
 
 tomcat:
-  version: 8.5.23
-  download_url: http://master/repo/tomcat/apache-tomcat-8.5.23.tar.gz
+  version: 8.5.41
+  download_url: http://51.68.142.164:8081/repository/public/apache/tomcat/tomcat_8/apache-tomcat/8.5.41/apache-tomcat-8.5.41.tar.gz
   download_dir: /u01/middleware/tomcat/downloaded
   binaries:
     home: /u01/middleware/tomcat
