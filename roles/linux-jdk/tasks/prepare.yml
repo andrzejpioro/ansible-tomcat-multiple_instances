@@ -1,0 +1,8 @@
+- name: add middleware group
+  group: name="{{ middleware_group }}"
+
+- name: add JAVA user
+  user: name="{{ java_user }}" group="{{ middleware_group }}" createhome=yes
+  become: True
+  become_method: sudo
+

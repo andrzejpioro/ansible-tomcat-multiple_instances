@@ -1,0 +1,20 @@
+  - stat:
+      path: "{{ java_base_dir }}/{{ java.full_version }}"
+    register: p
+  - debug:
+      msg: "JAVA JDK path exists and is a directory"
+    when: p.stat.isdir is defined and p.stat.isdir
+
+  - name: set fact JDK directory exists
+    set_fact:
+       jdk_already_installed : true
+    when: p.stat.isdir is defined and p.stat.isdir
+
+  - name: set fact JDK directory exists
+    set_fact:
+       jdk_already_installed : false
+    when: p.stat.isdir is not defined or not p.stat.exists
+
+  - debug: msg="JAVA is already installed"
+    when: jdk_already_installed
+
