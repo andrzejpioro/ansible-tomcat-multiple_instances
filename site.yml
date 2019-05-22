@@ -10,7 +10,7 @@
     middleware_group:   java
     installation_date:  "{{lookup('pipe', 'date +\"%Y-%m-%d %H:%M:%S\"')}}"
     
-    # TO-DO - usunac deklaracje zmiennej jdk_folder z tego miejsca
+    # TO-DO - delete this variable from here
     jdk_folder: /opt/java/jdk1.8.0_211
    
   vars_files:
