@@ -8,7 +8,7 @@ java:
 
 tomcat:
   version: 8.5.23
-  download_url: http://master/repo/tomcat/apache-tomcat-8.5.23.tar.gz	
+  download_url: http://master/repo/tomcat/apache-tomcat-8.5.23.tar.gz
   download_dir: /u01/middleware/tomcat/downloaded
   binaries:
     home: /u01/middleware/tomcat
